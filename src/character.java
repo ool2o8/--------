@@ -11,6 +11,7 @@ public class character extends JPanel{
 	private int HP=200;
 	private double MP=0;
 	private double snowball=50;
+	private int score=0;
 	private Image image;
 	public character() {
 		ImageIcon ic = new ImageIcon("images/´©´©ÀÇ µÞÅÂ.png");
