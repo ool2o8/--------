@@ -5,10 +5,10 @@ public class character extends JPanel{
 	private int mx;
 	private int my;
 	private int x=500;
-	private int y=400;
+	private int y=700;
 	private int w;
 	private int h;
-	private int HP=200;
+	private int HP=100;
 	private double MP=0;
 	private double snowball=50;
 	private int score=0;
@@ -23,7 +23,7 @@ public class character extends JPanel{
 		
 	}
 	public void setMP() {
-		if(MP<200) {
+		if(MP<100) {
 		MP+=0.1;
 		}
 	}

@@ -86,14 +86,14 @@ public class Board extends JPanel implements ActionListener{
 	
 		g2d.drawImage(nunu.getImage(),nunu.getX(), nunu.getY(), 200,200, this);
 		g2d.setColor(Color.green);
-		g2d.fillRect(nunu.getX()+28, nunu.getY()-20, nunu.getHP(),10);
+		g2d.fillRect(nunu.getX()+45, nunu.getY()-20, nunu.getHP(),10);
 		g2d.setColor(Color.white);
-		g2d.drawRect(nunu.getX()+28, nunu.getY()-20, 200,10);
+		g2d.drawRect(nunu.getX()+45, nunu.getY()-20, 100,10);
 	
 		g2d.setColor(Color.blue);
-		g2d.fillRect(nunu.getX()+28, nunu.getY()-10, (int)nunu.getMP(),10);
+		g2d.fillRect(nunu.getX()+45, nunu.getY()-10, (int)nunu.getMP(),10);
 		g2d.setColor(Color.white);
-		g2d.drawRect(nunu.getX()+28, nunu.getY()-10, 200,10);
+		g2d.drawRect(nunu.getX()+45, nunu.getY()-10, 100,10);
 	}
 	public void doDrawBackground(Graphics g2d) {
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY1(), 1280,inGameBack.getHeigh(), this);

@@ -37,14 +37,14 @@ public class AniBoard extends JPanel implements ActionListener{
 	
 		g2d.drawImage(nunu.getImage(),nunu.getX(), nunu.getY(), this);
 		g2d.setColor(Color.black);
-		g2d.drawRect(nunu.getX()+28, nunu.getY()-20, 200,10);
+		g2d.drawRect(nunu.getX()+28, nunu.getY()-20, 100,10);
 		g2d.setColor(Color.red);
-		g2d.fillRect(nunu.getX()+28, nunu.getY()-20, nunu.getHP()*2,10);
+		g2d.fillRect(nunu.getX()+28, nunu.getY()-20, nunu.getHP(),10);
 		
 		g2d.setColor(Color.black);
-		g2d.drawRect(nunu.getX()+28, nunu.getY()-10, 200,10);
+		g2d.drawRect(nunu.getX()+28, nunu.getY()-10, 100,10);
 		g2d.setColor(Color.blue);
-		g2d.fillRect(nunu.getX()+28, nunu.getY()-10, (int)nunu.getMP()*2,10);
+		g2d.fillRect(nunu.getX()+28, nunu.getY()-10, (int)nunu.getMP(),10);
 	}
 	
 	@Override
