@@ -1,0 +1,130 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+public class Board extends JPanel implements ActionListener{
+	private boolean inGame=false;
+	private Timer timer;
+	private character nunu;
+	private Background inGameBack=new Background();
+	private Dimension d;
+	private 
+	Bgm bgm=new Bgm();
+	public void InGame() {//인게임 전환
+		inGame=true;
+	}
+	public Board() {//패널 생성자
+		
+		setBackground(Color.black);
+		initBoard();
+		initVariables();
+	}
+	private void initVariables() {
+		d=new Dimension(400,400);
+		timer=new Timer(10,this);
+		timer.start();
+	}
+	private void initBoard() {
+		
+		nunu=new character();
+		addKeyListener(new TAdapter());
+		setFocusable(true);
+	}
+	
+	class TAdapter extends KeyAdapter{
+		@Override
+		public void keyPressed(KeyEvent e) {
+			int key =e.getExtendedKeyCode();
+			if(key=='s'||key=='S') {
+				InGame();
+				bgm.playSound(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f,false);
+				bgm.stopBgm();
+			}
+			else {
+				nunu.keyPressed(e);
+			}
+			
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {
+			nunu.keyReleased(e);
+		}
+	}
+	public void actionPerformed(ActionEvent e) {
+		nunu.move();//누누 조작 함수
+		nunu.setMP();//누누 마나 재생
+		inGameBack.setY();
+		repaint();
+	}
+	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
+		Image back=new ImageIcon("images/main누누.jpg").getImage();
+		g2d.drawImage(back, 0, 100, 1280, 720, null);
+		
+		g2d.setColor(new Color(0,32,48));
+		//g2d.fillRect(480,400,400,100);
+		g2d.setColor(Color.white); 
+		g2d.drawRect(460,350,400,100);
+		
+		String s="Press 'S' to start";
+		Font small=new Font("Helvetica",Font.BOLD,30);
+		FontMetrics metr=this.getFontMetrics(small);
+		
+		g2d.setColor(Color.white);
+		g2d.setFont(small);
+		g2d.drawString(s,560,300);
+		g2d.setFont(new Font("Serif", Font.PLAIN,50));
+		g2d.drawString("START", 590, 410);
+		
+			
+	}
+	private void doDrawNunu(Graphics g) {//누누 캐릭터 그리는 함수
+		Graphics2D g2d=(Graphics2D) g;
+	
+		g2d.drawImage(nunu.getImage(),nunu.getX(), nunu.getY(), 200,200, this);
+		g2d.setColor(Color.green);
+		g2d.fillRect(nunu.getX()+28, nunu.getY()-20, nunu.getHP(),10);
+		g2d.setColor(Color.white);
+		g2d.drawRect(nunu.getX()+28, nunu.getY()-20, 200,10);
+	
+		g2d.setColor(Color.blue);
+		g2d.fillRect(nunu.getX()+28, nunu.getY()-10, (int)nunu.getMP(),10);
+		g2d.setColor(Color.white);
+		g2d.drawRect(nunu.getX()+28, nunu.getY()-10, 200,10);
+	}
+	public void doDrawBackground(Graphics g2d) {
+		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY1(), 1280,inGameBack.getHeigh(), this);
+		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY2(), 1280, inGameBack.getHeigh(), this);
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {//자신 그림
+		super.paintComponent(g);
+		doDrawing(g);
+		Toolkit.getDefaultToolkit().sync();
+	}
+	private void doDrawing(Graphics g) {
+		Graphics2D g2d=(Graphics2D) g;
+		if(!inGame) {//!인게임
+			showIntroScreen(g2d);//인트로화면 
+		}
+		else {//인게임
+			doDrawBackground(g2d);
+			doDrawNunu(g2d);//누누 출력
+		}
+		Toolkit.getDefaultToolkit().sync();
+		g2d.dispose();
+	}
+	private class MoveAdapter extends KeyAdapter{
+		public void keyReleased(KeyEvent e) {
+			nunu.keyReleased(e);
+		}
+		public void keyPressed(KeyEvent e) {
+			nunu.keyPressed(e);
+		}
+	}
+	
+}
