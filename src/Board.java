@@ -11,7 +11,9 @@ public class Board extends JPanel implements ActionListener{
 	private Timer timer;
 	private character nunu;
 	private Background inGameBack=new Background();
+	private enemy E=new enemy();
 	private Dimension d;
+	private JLabel score;
 	Bgm B=new Bgm();
 	public void InGame() {//인게임 전환
 		Main.getInGame();
@@ -46,6 +48,8 @@ public class Board extends JPanel implements ActionListener{
 			if(key=='s'||key=='S') {
 				InGame();
 				B.stopBgm();
+				B.playSound(new File("sounds/소환사의 협곡에 오신것을 환영합니다.wav"), 1.0f, false);
+				
 			}
 			else {
 				nunu.keyPressed(e);
@@ -61,6 +65,7 @@ public class Board extends JPanel implements ActionListener{
 		nunu.move();//누누 조작 함수
 		nunu.setMP();//누누 마나 재생
 		inGameBack.setY();
+		E.move();
 		repaint();
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
@@ -102,6 +107,10 @@ public class Board extends JPanel implements ActionListener{
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY1(), 1280,inGameBack.getHeigh(), this);
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY2(), 1280, inGameBack.getHeigh(), this);
 	}
+	public void doDrawEnemy(Graphics g2d) {
+		g2d.drawImage(E.getImage(), 0, E.getY(), 100,E.getHeigh(), this);
+		
+	}
 	
 	@Override
 	public void paintComponent(Graphics g) {//자신 그림
@@ -117,6 +126,7 @@ public class Board extends JPanel implements ActionListener{
 		else {//인게임
 			doDrawBackground(g2d);
 			doDrawNunu(g2d);//누누 출력
+			doDrawEnemy(g2d);
 		}
 		Toolkit.getDefaultToolkit().sync();
 		g2d.dispose();
