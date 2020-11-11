@@ -10,7 +10,7 @@ public class character extends JPanel{
 	private int h;
 	private int HP=100;
 	private double MP=0;
-	private double snowball=50;
+	private double snowball=200;
 	private int score=0;
 	private Image image;
 	public character() {
@@ -23,9 +23,21 @@ public class character extends JPanel{
 		
 	}
 	public void setMP() {
-		if(MP<100) {
+		if(MP<100&&Main.getInGame()) {
 		MP+=0.1;
+		snowball+=0.01;
+		score++;
 		}
+	}
+	public void setscore(){
+		if(Main.getInGame()) {
+			score++;
+			}
+	}
+	public void setsnowball(){
+		if(Main.getInGame()) {
+			snowball+=0.1;
+			}
 	}
 	public int getHP() {
 		return HP;
@@ -48,7 +60,12 @@ public class character extends JPanel{
 	public Image getImage() {
 		return image;
 	}
-	
+	public int getScore() {
+		return score;
+	}
+	public double getSnowball() {
+		return snowball;
+	}
 	
 	public void move() {
 		x+=mx;

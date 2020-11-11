@@ -7,8 +7,8 @@ public class enemy extends JPanel{
 	private int y;
 	private int w;
 	private int h;
-	private int damage;
-	private int speed=1;
+	private int damage=30;
+	private int speed=3;
 	private Image image;
 	public enemy() {
 		ImageIcon ic = new ImageIcon("images/mushroom.png");
@@ -41,6 +41,8 @@ public class enemy extends JPanel{
 	
 	
 	public void move() {
-		y+=speed;
+		if(Main.getInGame()) {
+			y+=speed;
+		}
 	}
 }
