@@ -7,18 +7,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 public class Board extends JPanel implements ActionListener{
-	private boolean inGame=false;
+	private static boolean inGame=false;
 	private Timer timer;
 	private character nunu;
 	private Background inGameBack=new Background();
 	private Dimension d;
-	private 
-	Bgm bgm=new Bgm();
+	Bgm B=new Bgm();
 	public void InGame() {//인게임 전환
+		Main.getInGame();
 		inGame=true;
 	}
+	public static boolean getInGame() {
+		return inGame;
+	}
 	public Board() {//패널 생성자
-		
+		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f, false);
 		setBackground(Color.black);
 		initBoard();
 		initVariables();
@@ -29,6 +32,7 @@ public class Board extends JPanel implements ActionListener{
 		timer.start();
 	}
 	private void initBoard() {
+		
 		
 		nunu=new character();
 		addKeyListener(new TAdapter());
@@ -41,8 +45,7 @@ public class Board extends JPanel implements ActionListener{
 			int key =e.getExtendedKeyCode();
 			if(key=='s'||key=='S') {
 				InGame();
-				bgm.playSound(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f,false);
-				bgm.stopBgm();
+				B.stopBgm();
 			}
 			else {
 				nunu.keyPressed(e);
@@ -61,13 +64,13 @@ public class Board extends JPanel implements ActionListener{
 		repaint();
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
-		Image back=new ImageIcon("images/main누누.jpg").getImage();
-		g2d.drawImage(back, 0, 100, 1280, 720, null);
+		Image back=new ImageIcon("images/introImage.jpg").getImage();
+		g2d.drawImage(back, 0, 120, 1280, 720, null);
 		
-		g2d.setColor(new Color(0,32,48));
+		//g2d.setColor(new Color(0,32,48));
 		//g2d.fillRect(480,400,400,100);
 		g2d.setColor(Color.white); 
-		g2d.drawRect(460,350,400,100);
+		g2d.drawRect(460,450,400,100);
 		
 		String s="Press 'S' to start";
 		Font small=new Font("Helvetica",Font.BOLD,30);
@@ -75,9 +78,9 @@ public class Board extends JPanel implements ActionListener{
 		
 		g2d.setColor(Color.white);
 		g2d.setFont(small);
-		g2d.drawString(s,560,300);
+		g2d.drawString(s,560,400);
 		g2d.setFont(new Font("Serif", Font.PLAIN,50));
-		g2d.drawString("START", 590, 410);
+		g2d.drawString("START", 590, 510);
 		
 			
 	}

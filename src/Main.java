@@ -7,15 +7,15 @@ import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 public class Main extends JFrame implements ActionListener{
-	private boolean inGame=false;
+	private static boolean inGame=false;
 	private Timer timer;
 	public Main() {
 		initUI();
 	}
-	public boolean getInGame() {
+	public static boolean getInGame() {
 		return inGame;
 	}
-	public void setInGame() {
+	public static void setInGame() {
 		inGame=true;
 	}
 	private void initUI() {
@@ -23,6 +23,7 @@ public class Main extends JFrame implements ActionListener{
 		
 		timer=new Timer(40,this);
 		timer.start();
+		
 		setTitle("µ¥±¼µ¥±¼ ´«µ¢ÀÌ!!!");
 		setSize(1280,1000);
 		
