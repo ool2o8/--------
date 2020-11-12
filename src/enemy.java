@@ -18,7 +18,7 @@ public class enemy {
 		System.out.println(x);
 		w=image.getWidth(null);
 		h=image.getHeight(null);
-		y=-h*(int)(Math.random()*300);
+		y=0;
 		
 		
 	

@@ -1,13 +1,22 @@
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener{
 	private static boolean inGame=false;
 	private Timer timer;
@@ -16,7 +25,7 @@ public class Board extends JPanel implements ActionListener{
 	private Dimension d;
 	private JLabel score=new JLabel();
 	private enemy e;
-	Thread th;
+
 	int t=0, t2=0;
 	ArrayList enemy_list=new ArrayList();
 	Bgm B=new Bgm();
@@ -46,33 +55,9 @@ public class Board extends JPanel implements ActionListener{
 		
 		inGameBack=new Background();
 		nunu=new character();
-		//run();
-		for(int i=0;i<100;i++) {
-			e = new enemy("images/mushroom.png");
-			enemy_list.add(e);
-		}
 	}
 	
-	public void run()
-	{
-		try
-		{
-			while(Main.getInGame())
-			{
-				repaint();
-				Thread.sleep(20);
-				t ++;
-				t2+=133;
-				if(t%30==0) {
-				e = new enemy("images/mushroom.png");
-				enemy_list.add(e);
-				}
-				
-			}
-		}catch(Exception e){
-			
-		}
-		}
+	
 	
 	
 	class TAdapter extends KeyAdapter{
@@ -97,12 +82,24 @@ public class Board extends JPanel implements ActionListener{
 			nunu.keyReleased(e);
 		}
 	}
+	public void initmushroom() {
+		if(t%50==0) {
+			e = new enemy("images/mushroom.png");
+			enemy_list.add(e);
+	
+		}
+	}
 	public void actionPerformed(ActionEvent e) {
+		t++;
+		
+			
+	
 		nunu.move();//누누 조작 함수
 		nunu.setMP();//누누 마나 재생
 		nunu.setscore();
 		nunu.setsnowball();
 		inGameBack.setY();
+		initmushroom();
 		move();
 		repaint();
 	}
@@ -110,6 +107,9 @@ public class Board extends JPanel implements ActionListener{
 		for(int i=0;i<enemy_list.size();i++) {
 			e = (enemy)(enemy_list.get(i));
 			e.move();
+			if(e.getY()>1280) {
+				enemy_list.remove(i);
+			}
 		}
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
