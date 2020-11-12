@@ -1,28 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-public class enemy extends JPanel{
+public class enemy {
 	
-	private int x=500;
+	private int x;
 	private int y;
 	private int w;
 	private int h;
-	private int damage=30;
-	private int speed=3;
+	private boolean visible;
 	private Image image;
-	public enemy() {
-		ImageIcon ic = new ImageIcon("images/mushroom.png");
+	private Rectangle rect;
+	public enemy(String enemy) {
+	
+		ImageIcon ic = new ImageIcon(enemy);
 		image=ic.getImage();
-		
+		x=(int)(Math.random()*1180);
+		System.out.println(x);
 		w=image.getWidth(null);
 		h=image.getHeight(null);
-		y=-h;
+		y=-h*(int)(Math.random()*300);
 		
+		
+	
 	}
 	
-	public int getDamage() {
-		return damage;
-	}
+		
 	public int getX() {
 		return x;
 	}
@@ -38,11 +40,14 @@ public class enemy extends JPanel{
 	public Image getImage() {
 		return image;
 	}
-	
-	
 	public void move() {
-		if(Main.getInGame()) {
-			y+=speed;
-		}
+		y+=3;
 	}
+	public void setVisible(boolean visible) {
+		this.visible=visible;
+	}
+	
+	
+	
+	
 }

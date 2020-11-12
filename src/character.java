@@ -25,7 +25,6 @@ public class character extends JPanel{
 	public void setMP() {
 		if(MP<100&&Main.getInGame()) {
 		MP+=0.1;
-		snowball+=0.01;
 		score++;
 		}
 	}
@@ -36,7 +35,7 @@ public class character extends JPanel{
 	}
 	public void setsnowball(){
 		if(Main.getInGame()) {
-			snowball+=0.1;
+			snowball+=0.01;
 			}
 	}
 	public int getHP() {

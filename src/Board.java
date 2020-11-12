@@ -6,14 +6,19 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Vector;
 public class Board extends JPanel implements ActionListener{
 	private static boolean inGame=false;
 	private Timer timer;
 	private character nunu;
 	private Background inGameBack;
-	private enemy E=new enemy();
 	private Dimension d;
 	private JLabel score=new JLabel();
+	private enemy e;
+	Thread th;
+	int t=0, t2=0;
+	ArrayList enemy_list=new ArrayList();
 	Bgm B=new Bgm();
 	public void InGame() {//인게임 전환
 		Main.getInGame();
@@ -23,7 +28,8 @@ public class Board extends JPanel implements ActionListener{
 		return inGame;
 	}
 	public Board() {//패널 생성자
-		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f, false);
+		
+		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 0.01f, false);
 		setBackground(Color.black);
 		initBoard();
 		initVariables();
@@ -35,12 +41,39 @@ public class Board extends JPanel implements ActionListener{
 	}
 	private void initBoard() {
 		
-		inGameBack=new Background();
-		nunu=new character();
-		
 		addKeyListener(new TAdapter());
 		setFocusable(true);
+		
+		inGameBack=new Background();
+		nunu=new character();
+		//run();
+		for(int i=0;i<100;i++) {
+			e = new enemy("images/mushroom.png");
+			enemy_list.add(e);
+		}
 	}
+	
+	public void run()
+	{
+		try
+		{
+			while(Main.getInGame())
+			{
+				repaint();
+				Thread.sleep(20);
+				t ++;
+				t2+=133;
+				if(t%30==0) {
+				e = new enemy("images/mushroom.png");
+				enemy_list.add(e);
+				}
+				
+			}
+		}catch(Exception e){
+			
+		}
+		}
+	
 	
 	class TAdapter extends KeyAdapter{
 		@Override
@@ -70,8 +103,14 @@ public class Board extends JPanel implements ActionListener{
 		nunu.setscore();
 		nunu.setsnowball();
 		inGameBack.setY();
-		E.move();
+		move();
 		repaint();
+	}
+	public void move() {
+		for(int i=0;i<enemy_list.size();i++) {
+			e = (enemy)(enemy_list.get(i));
+			e.move();
+		}
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
 		Image back=new ImageIcon("images/introImage.jpg").getImage();
@@ -121,8 +160,12 @@ public class Board extends JPanel implements ActionListener{
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY1(), 1280,inGameBack.getHeigh(), this);
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY2(), 1280, inGameBack.getHeigh(), this);
 	}
+	
 	public void doDrawEnemy(Graphics g2d) {
-		g2d.drawImage(E.getImage(), E.getX(), E.getY(), 100,E.getHeigh(), this);
+		for(int i=0;i<enemy_list.size();i++) {
+			e = (enemy)(enemy_list.get(i));
+			g2d.drawImage(e.getImage(), e.getX(), e.getY(), e.getWidth(), e.getHeigh(), this);
+		}
 		
 	}
 	
@@ -143,7 +186,6 @@ public class Board extends JPanel implements ActionListener{
 			doDrawNunu(g2d);//누누 출력
 			doDrawEnemy(g2d);
 		
-			
 		}
 		Toolkit.getDefaultToolkit().sync();
 		g2d.dispose();

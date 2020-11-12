@@ -24,10 +24,9 @@ public class Main extends JFrame implements ActionListener{
 	private void initUI() {
 		add(new Board());
 		
-		
 		setTitle("µ¥±¼µ¥±¼ ´«µ¢ÀÌ!!!");
 		setSize(1280,1000);
-		
+		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
