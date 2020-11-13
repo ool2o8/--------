@@ -19,6 +19,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener{
@@ -120,6 +121,19 @@ public class Board extends JPanel implements ActionListener{
 		inGameBack.setY();
 		initmushroom();
 		move();
+		if(nunu.getHP()<=0) {
+			int result=JOptionPane.showConfirmDialog(this,"CONTINUE?");//정답 맞춘 후 계속하기 취소, 끝내기 다이얼로그 생성
+			if(result==JOptionPane.YES_OPTION) {//계속하면 
+				//lblHint.setVisible(true);
+				//reStartGame();//reStartGame함수 호출					
+				}
+			else if(result==JOptionPane.NO_OPTION) {//끝내기
+				System.exit(0);//종료
+			}
+			else {//취소하면 그대로
+				
+			}
+		}
 		}
 	
 		repaint();
