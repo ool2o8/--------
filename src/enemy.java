@@ -10,20 +10,20 @@ public class enemy {
 	private boolean visible;
 	private Image image;
 	private Rectangle rect;
+	private int speed=(int)(Math.random()*5+1);
+	private String enemy;
 	public enemy(String enemy) {
 	
-		ImageIcon ic = new ImageIcon(enemy);
+		ImageIcon ic = new ImageIcon("images/"+enemy+".png");
+		this.enemy=enemy;
 		image=ic.getImage();
 		x=(int)(Math.random()*1180);
-		System.out.println(x);
 		w=image.getWidth(null);
 		h=image.getHeight(null);
-		y=0;
-		
-		
+		y=-h;
+		rect=new Rectangle(x,y,w,h);
 	
 	}
-	
 		
 	public int getX() {
 		return x;
@@ -40,13 +40,22 @@ public class enemy {
 	public Image getImage() {
 		return image;
 	}
+	public String getEnemy() {
+		return enemy;
+	}
 	public void move() {
-		y+=3;
+		y+=(Board.getLevel()*speed);
+		rect.y=y;
+	}
+	public boolean isVisible() {
+		return visible;
 	}
 	public void setVisible(boolean visible) {
 		this.visible=visible;
 	}
-	
+	public Rectangle getBounds() {
+		return rect;
+	}
 	
 	
 	

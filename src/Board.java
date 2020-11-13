@@ -5,6 +5,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,9 +29,12 @@ public class Board extends JPanel implements ActionListener{
 	private Dimension d;
 	private JLabel score=new JLabel();
 	private enemy e;
+	private Mushroom m;
+	private static int level=1;
 
 	int t=0, t2=0;
 	ArrayList enemy_list=new ArrayList();
+	ArrayList mushroom_list=new ArrayList();
 	Bgm B=new Bgm();
 	public void InGame() {//인게임 전환
 		Main.getInGame();
@@ -35,6 +42,9 @@ public class Board extends JPanel implements ActionListener{
 	}
 	public static boolean getInGame() {
 		return inGame;
+	}
+	public static int getLevel() {
+		return level;
 	}
 	public Board() {//패널 생성자
 		
@@ -57,9 +67,6 @@ public class Board extends JPanel implements ActionListener{
 		nunu=new character();
 	}
 	
-	
-	
-	
 	class TAdapter extends KeyAdapter{
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -69,7 +76,7 @@ public class Board extends JPanel implements ActionListener{
 				InGame();
 				Main.setInGame();
 				B.stopBgm();
-				B.playSound(new File("sounds/소환사의 협곡에 오신것을 환영합니다.wav"), 1.0f, false);
+				//B.playSound(new File("sounds/소환사의 협곡에 오신것을 환영합니다.wav"), 1.0f, false);
 				
 			}
 			else {
@@ -83,17 +90,29 @@ public class Board extends JPanel implements ActionListener{
 		}
 	}
 	public void initmushroom() {
-		if(t%50==0) {
-			e = new enemy("images/mushroom.png");
-			enemy_list.add(e);
+		if(t%300==0) {
+			m = new Mushroom("minion", 20);
+			mushroom_list.add(m);
+		}
+		else if(t%200==0) {
+			m = new Mushroom("icewall", 10);
+			mushroom_list.add(m);
 	
 		}
+		else if(t%100==0) {
+			m = new Mushroom("mushroom", 20);
+			mushroom_list.add(m);
+	
+		}
+		
 	}
 	public void actionPerformed(ActionEvent e) {
-		t++;
-		
-			
-	
+		if(Main.getInGame()) {
+		t+=level;
+		if(t%10000==0) {
+			level+=1;
+		}
+		collisions();
 		nunu.move();//누누 조작 함수
 		nunu.setMP();//누누 마나 재생
 		nunu.setscore();
@@ -101,15 +120,44 @@ public class Board extends JPanel implements ActionListener{
 		inGameBack.setY();
 		initmushroom();
 		move();
+		}
+	
 		repaint();
 	}
 	public void move() {
-		for(int i=0;i<enemy_list.size();i++) {
-			e = (enemy)(enemy_list.get(i));
-			e.move();
-			if(e.getY()>1280) {
-				enemy_list.remove(i);
+		for(int i=0;i<mushroom_list.size();i++) {
+			m = (Mushroom)(mushroom_list.get(i));
+			m.move();
+			if(m.getY()>1280) {
+				mushroom_list.remove(i);
 			}
+		}
+	}
+	public void collisions() {
+		for(int i=0;i<mushroom_list.size();i++) {
+			m = (Mushroom)(mushroom_list.get(i));
+			Rectangle r1=m.getBounds();
+			
+			if(r1.intersects(nunu.getBounds())) {
+		
+				nunu.getDamage(m.getDamage());
+				sound(m.getEnemy());
+				System.out.println(m.getEnemy());
+				mushroom_list.remove(i);
+			}
+			}
+	}
+	public void sound(String enemy) {
+		try {
+			AudioInputStream ais=AudioSystem.getAudioInputStream(new File("sounds/"+enemy+".wav"));
+			
+			Clip clip=AudioSystem.getClip();
+			clip.stop();
+			clip.open(ais);
+			clip.start();
+		}
+		catch(Exception ex) {
+			
 		}
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
@@ -162,9 +210,9 @@ public class Board extends JPanel implements ActionListener{
 	}
 	
 	public void doDrawEnemy(Graphics g2d) {
-		for(int i=0;i<enemy_list.size();i++) {
-			e = (enemy)(enemy_list.get(i));
-			g2d.drawImage(e.getImage(), e.getX(), e.getY(), e.getWidth(), e.getHeigh(), this);
+		for(int i=0;i<mushroom_list.size();i++) {
+			m = (Mushroom)(mushroom_list.get(i));
+			g2d.drawImage(m.getImage(), m.getX(), m.getY(), m.getWidth(), m.getHeigh(), this);
 		}
 		
 	}

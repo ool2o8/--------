@@ -19,7 +19,7 @@ public class Bgm {
                      
                              public void update(LineEvent event) {
                                      // TODO Auto-generated method stub
-                                     System.out.println("" + event.getType());
+                                
                                      if(event.getType()==LineEvent.Type.STOP){
                                              bgmclip.close();
                                      }

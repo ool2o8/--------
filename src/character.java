@@ -13,8 +13,9 @@ public class character extends JPanel{
 	private double snowball=200;
 	private int score=0;
 	private Image image;
+	private Rectangle nunu;
 	public character() {
-		ImageIcon ic = new ImageIcon("images/´©´©ÀÇ µÞÅÂ.png");
+		ImageIcon ic = new ImageIcon("images/NUNU.png");
 		image=ic.getImage();
 		
 		w=image.getWidth(null);
@@ -70,19 +71,45 @@ public class character extends JPanel{
 		x+=mx;
 		y+=my;
 	}
+	public void getDamage(int damage) {
+		HP-=damage;
+	}
+	public Rectangle getBounds() {
+		return new Rectangle(x-((int)(snowball/2-100)), y-(int)(snowball/2)-((int)(snowball/2-100))+20, (int)snowball, (int)(snowball));
+	}
 	public void keyPressed(KeyEvent e) {
 		int key=e.getKeyCode();
 		if(key==KeyEvent.VK_LEFT) {
-			mx=-6;
+			if(this.x>0) {
+				mx=-6;
+			}
+			else {
+				mx=0;
+			}
 		}
 		if(key==KeyEvent.VK_RIGHT) {
-			mx=6;
+			if(this.x<1080) {
+				mx=6;
+			}
+			else {
+				mx=0;
+			}
 		}
 		if(key==KeyEvent.VK_UP) {
-			my=-6;
+			if(this.y>0) {
+				my=-6;
+			}
+			else {
+				my=0;
+			}
 		}
 		if(key==KeyEvent.VK_DOWN) {
-			my=6;
+			if(this.y<800) {
+				my=6;
+			}
+			else {
+				my=0;
+			}
 		}
 	}
 	public void keyReleased(KeyEvent e) {
