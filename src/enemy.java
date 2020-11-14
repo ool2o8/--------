@@ -10,7 +10,7 @@ public class enemy {
 	private boolean visible;
 	private Image image;
 	private Rectangle rect;
-	private int speed=(int)(Math.random()*5+1);
+	private int speed=(int)(Math.random()*3+1);
 	private String enemy;
 	public enemy(String enemy) {
 	
@@ -18,10 +18,13 @@ public class enemy {
 		this.enemy=enemy;
 		image=ic.getImage();
 		x=(int)(Math.random()*1180);
+		 
+		
 		w=image.getWidth(null);
 		h=image.getHeight(null);
 		y=-h;
 		rect=new Rectangle(x,y,w,h);
+	
 	
 	}
 		
@@ -54,6 +57,22 @@ public class enemy {
 		this.visible=visible;
 	}
 	public Rectangle getBounds() {
+		
+		if(enemy.equals("icewall")) {
+			rect.x=x+30;
+			rect.y=y+24;
+			rect.width=w-60;
+			rect.height=h-52;
+		}
+		else if(enemy.equals("mushroom")) {
+			
+		}
+		else {
+			rect.x=x+20;
+			rect.y=y+22;
+			rect.width=w-40;
+			rect.height=h-44;
+		}
 		return rect;
 	}
 	

@@ -18,6 +18,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,8 +34,12 @@ public class Board extends JPanel implements ActionListener{
 	private enemy e;
 	private Mushroom m;
 	private static int level=1;
-
+	private JButton help;
+	int init=100;
 	int t=0, t2=0;
+	int player=1;
+	private JPanel leftPanel;
+//	private Help H;
 	ArrayList enemy_list=new ArrayList();
 	ArrayList mushroom_list=new ArrayList();
 	Bgm B=new Bgm();
@@ -48,19 +54,22 @@ public class Board extends JPanel implements ActionListener{
 		return level;
 	}
 	public Board() {//패널 생성자
+		setLayout(null);
 		
-		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 0.01f, false);
+		
+		
+		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f, false);
 		setBackground(Color.black);
 		initBoard();
 		initVariables();
 	}
+	
 	private void initVariables() {
 		d=new Dimension(400,400);
 		timer=new Timer(10,this);
 		timer.start();
 	}
 	private void initBoard() {
-		
 		addKeyListener(new TAdapter());
 		setFocusable(true);
 		
@@ -77,8 +86,17 @@ public class Board extends JPanel implements ActionListener{
 				InGame();
 				Main.setInGame();
 				B.stopBgm();
-				//B.playSound(new File("sounds/소환사의 협곡에 오신것을 환영합니다.wav"), 1.0f, false);
+				B.playSound(new File("sounds/소환사의 협곡에 오신것을 환영합니다.wav"), 1.0f, false);
 				
+			}
+			else if(key=='h'||key=='H') {
+				JFrame help=new JFrame();
+				help.setTitle("데굴데굴 눈덩이!!!");
+				help.setSize(500,500);
+				help.setResizable(false);
+				help.setVisible(true);
+				help.setLocationRelativeTo(null);
+				help.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
 			else {
 				nunu.keyPressed(e);
@@ -91,16 +109,16 @@ public class Board extends JPanel implements ActionListener{
 		}
 	}
 	public void initmushroom() {
-		if(t%300==0) {
+		if(t%(init*3)==0) {
 			m = new Mushroom("minion", 20);
 			mushroom_list.add(m);
 		}
-		else if(t%200==0) {
+		else if(t%(init*2)==0) {
 			m = new Mushroom("icewall", 10);
 			mushroom_list.add(m);
 	
 		}
-		else if(t%100==0) {
+		else if(t%(init)==0) {
 			m = new Mushroom("mushroom", 20);
 			mushroom_list.add(m);
 	
@@ -108,10 +126,12 @@ public class Board extends JPanel implements ActionListener{
 		
 	}
 	public void actionPerformed(ActionEvent e) {
+	
 		if(Main.getInGame()) {
 		t+=level;
-		if(t%10000==0) {
+		if(t%(init*30)==0) {
 			level+=1;
+			init-=5;
 		}
 		collisions();
 		nunu.move();//누누 조작 함수
@@ -122,10 +142,13 @@ public class Board extends JPanel implements ActionListener{
 		initmushroom();
 		move();
 		if(nunu.getHP()<=0) {
-			int result=JOptionPane.showConfirmDialog(this,"CONTINUE?");//정답 맞춘 후 계속하기 취소, 끝내기 다이얼로그 생성
+			timer.stop();
+			//String nickname=JOptionPane.showInputDialog();
+			String[] buttons= {"다시하기","끝내기","랭크확인"};
+			int result=JOptionPane.showOptionDialog(this, "NUNU가 당했습니다", "GAME OVER!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, "두번째값");
+ 
 			if(result==JOptionPane.YES_OPTION) {//계속하면 
-				//lblHint.setVisible(true);
-				//reStartGame();//reStartGame함수 호출					
+				reStart();				
 				}
 			else if(result==JOptionPane.NO_OPTION) {//끝내기
 				System.exit(0);//종료
@@ -156,8 +179,8 @@ public class Board extends JPanel implements ActionListener{
 		
 				nunu.getDamage(m.getDamage());
 				sound(m.getEnemy());
-				System.out.println(m.getEnemy());
 				mushroom_list.remove(i);
+				nunu.setScore();
 			}
 			}
 	}
@@ -174,6 +197,18 @@ public class Board extends JPanel implements ActionListener{
 			
 		}
 	}
+	public void reStart() {
+		timer.start();
+		t=0;
+		level=1;
+		init=100;
+		for(int i=0;i<mushroom_list.size();i++) {
+			m = (Mushroom)(mushroom_list.get(i));
+				mushroom_list.remove(i);
+			}
+		nunu.setRe();
+		
+	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
 		Image back=new ImageIcon("images/introImage.jpg").getImage();
 		g2d.drawImage(back, 0, 120, 1280, 720, null);
@@ -189,21 +224,27 @@ public class Board extends JPanel implements ActionListener{
 		
 		g2d.setColor(Color.white);
 		g2d.setFont(small);
-		g2d.drawString(s,560,400);
+		g2d.drawString(s,550,400);
 		g2d.setFont(new Font("Serif", Font.PLAIN,50));
-		g2d.drawString("START", 590, 510);
-		
+		g2d.drawString("START", 580, 510);
+		String S="Press \'h\' to HELP";
+		g2d.setFont(small);
+		g2d.setColor(Color.darkGray);
+		g2d.drawString(S, 530, 900);
 			
 	}
 	private void doDrawNunu(Graphics g) {//누누 캐릭터 그리는 함수
 		Graphics2D g2d=(Graphics2D) g;
+		Font small=new Font("Verdana", Font.BOLD, 30);
 		
 		String s="SCORE : "+nunu.getScore();
-		Font small=new Font("Verdana", Font.BOLD, 30);
+		String S="LEVEL : "+level;
+		
 		
 		g2d.setColor(Color.white);
 		g2d.setFont(small);
 		g2d.drawString(s, 560, 40);
+		g2d.drawString(S, 30, 30);
 		g2d.setColor(Color.white);
 		g2d.fillOval(nunu.getX()-((int)nunu.getSnowball()/2-100), nunu.getY()-(int)nunu.getSnowball()/2-((int)nunu.getSnowball()/2-100)+20, (int)nunu.getSnowball(), (int)nunu.getSnowball());
 		
@@ -217,6 +258,7 @@ public class Board extends JPanel implements ActionListener{
 		g2d.fillRect(nunu.getX()+45, nunu.getY()-10, (int)nunu.getMP(),10);
 		g2d.setColor(Color.black);
 		g2d.drawRect(nunu.getX()+45, nunu.getY()-10, 100,10);
+		
 	}
 	public void doDrawBackground(Graphics g2d) {
 		g2d.drawImage(inGameBack.getImage(), 0, inGameBack.getY1(), 1280,inGameBack.getHeigh(), this);
@@ -227,6 +269,7 @@ public class Board extends JPanel implements ActionListener{
 		for(int i=0;i<mushroom_list.size();i++) {
 			m = (Mushroom)(mushroom_list.get(i));
 			g2d.drawImage(m.getImage(), m.getX(), m.getY(), m.getWidth(), m.getHeigh(), this);
+			
 		}
 		
 	}
@@ -241,6 +284,7 @@ public class Board extends JPanel implements ActionListener{
 		Graphics2D g2d=(Graphics2D) g;
 		if(!inGame) {//!인게임
 			showIntroScreen(g2d);//인트로화면 
+			
 		}
 		else {//인게임
 			
@@ -261,4 +305,8 @@ public class Board extends JPanel implements ActionListener{
 		}
 	}
 	
+	
+
+	
 }
+

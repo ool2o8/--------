@@ -6,12 +6,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 public class Main extends JFrame implements ActionListener{
 	private static boolean inGame=false;
+	private Help H;
+	private JButton help;
 	public Main() {
 		initUI();
 	}
@@ -22,7 +26,12 @@ public class Main extends JFrame implements ActionListener{
 		inGame=true;
 	}
 	private void initUI() {
-		add(new Board());
+		setLayout(null);
+		
+		Board board=new Board();
+		board.setBounds(0,0,1280,1000);
+		add(board);
+		
 		
 		setTitle("µ¥±¼µ¥±¼ ´«µ¢ÀÌ!!!");
 		setSize(1280,1000);
@@ -31,7 +40,7 @@ public class Main extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 	}
-	
+		
 	public static void main(String[] args) throws Exception {
 		
 		Main A=new Main();
@@ -44,5 +53,14 @@ public class Main extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		
 	}
-	
+	private class Help extends JFrame implements ActionListener{//ÀÔ·Â °¨Áö·Î °ÔÀÓÀ» ÁøÇàÇÏ´Â Å¬·¡½º
+		public void actionPerformed(ActionEvent event) {
+			System.out.println("Å¬¸¯");
+			setTitle("µ¥±¼µ¥±¼ ´«µ¢ÀÌ!!!");
+			setSize(1280,1000);
+			setResizable(false);
+			setLocationRelativeTo(null);
+			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+	}
 }

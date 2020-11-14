@@ -23,10 +23,22 @@ public class character extends JPanel{
 	
 		
 	}
+	public void setScore() {
+		score+=100;
+	}
+	public void setRe() {
+		MP=0;
+		HP=100;
+		snowball=200;
+		score=0;
+		x=500;
+		y=700;
+		mx=0;
+		my=0;
+	}
 	public void setMP() {
 		if(MP<100&&Main.getInGame()) {
 		MP+=0.1;
-		score++;
 		}
 	}
 	public void setscore(){
@@ -75,7 +87,7 @@ public class character extends JPanel{
 		HP-=damage;
 	}
 	public Rectangle getBounds() {
-		return new Rectangle(x-((int)(snowball/2-100)), y-(int)(snowball/2)-((int)(snowball/2-100))+20, (int)snowball, (int)(snowball));
+		return new Rectangle(x-((int)(snowball/2-100)), y-(int)(snowball/2)-((int)(snowball/2-100))+20, (int)snowball, (int)(snowball)+64);
 	}
 	public void keyPressed(KeyEvent e) {
 		int key=e.getKeyCode();
