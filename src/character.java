@@ -24,7 +24,7 @@ public class character extends JPanel{
 		
 	}
 	public void recover_consume() {
-		HP+=50;
+		HP+=30;
 		if(HP>100) {
 			HP=100;
 		}
@@ -93,8 +93,29 @@ public class character extends JPanel{
 	}
 	
 	public void move() {
-		x+=mx;
-		y+=my;
+		if(getBounds().x>0&&getBounds().x+getBounds().width<1280) {
+			x+=mx;
+		}
+		if(getBounds().y>0&&getBounds().y+getBounds().height<1000) {
+			y+=my;
+		}
+		if(getBounds().x<0) {
+			getDamage(10);
+			x=50;
+		}
+		else if(getBounds().x+getBounds().width>1280) {
+			getDamage(10);
+			x=1211-(int)snowball;
+		}
+		
+		if(getBounds().y+getBounds().height>1000) {
+			getDamage(10);
+			y=700;
+		}
+		else if(getBounds().y<0) {
+			getDamage(10);
+			y=50;
+		}
 	}
 	public void getDamage(int damage) {
 		HP-=damage;
@@ -105,37 +126,20 @@ public class character extends JPanel{
 	public void keyPressed(KeyEvent e) {
 		int key=e.getKeyCode();
 		if(key==KeyEvent.VK_LEFT) {
-			if(this.x>0) {
 				mx=-6;
-			}
-			else {
-				mx=0;
-			}
-		}
+				}
+			
 		if(key==KeyEvent.VK_RIGHT) {
-			if(this.x<1080) {
 				mx=6;
-			}
-			else {
-				mx=0;
-			}
+			
 		}
 		if(key==KeyEvent.VK_UP) {
-			if(this.y>0) {
 				my=-6;
-			}
-			else {
-				my=0;
-			}
 		}
 		if(key==KeyEvent.VK_DOWN) {
-			if(this.y<800) {
 				my=6;
-			}
-			else {
-				my=0;
-			}
 		}
+		
 	}
 	public void keyReleased(KeyEvent e) {
 		int key=e.getKeyCode();

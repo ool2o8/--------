@@ -10,7 +10,7 @@ public class enemy {
 	private boolean visible;
 	private Image image;
 	private Rectangle rect;
-	private int speed=(int)(Math.random()*3+1);
+	private int speed=(int)(Math.random()*(Board.getLevel())+1);
 	private String enemy;
 	public enemy(String enemy) {
 	
@@ -47,7 +47,7 @@ public class enemy {
 		return enemy;
 	}
 	public void move() {
-		y+=(Board.getLevel()*speed);
+		y+=speed;
 		rect.y=y;
 	}
 	public boolean isVisible() {

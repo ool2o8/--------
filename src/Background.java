@@ -8,7 +8,7 @@ public class Background extends JPanel{
 	private int w;
 	private Image image;
 	public Background() {
-		ImageIcon ic = new ImageIcon("images/¹è°æ.jpg");
+		ImageIcon ic = new ImageIcon("images/background.jpg");
 		image=ic.getImage();
 		h=image.getHeight(null);
 		w=image.getWidth(null);

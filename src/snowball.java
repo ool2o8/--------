@@ -11,7 +11,7 @@ public class snowball {
 	private boolean visible;
 	private Image image;
 	private Rectangle rect;
-	private int speed=5;
+	private int speed=10;
 	private String enemy;
 	public snowball(int x, int y) {
 	
@@ -22,7 +22,7 @@ public class snowball {
 		w=image.getWidth(null);
 		h=image.getHeight(null);
 		y=-h;
-		rect=new Rectangle(x,y,200,200);
+		rect=new Rectangle(x,y,100,100);
 	
 	
 	}

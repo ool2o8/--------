@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,7 +43,7 @@ public class Board extends JPanel implements ActionListener{
 	int t=0, t2=0;
 	int player=1;
 	int Hscore=0;
-	private boolean skill_status=false;
+	private static boolean skill_status=false;
 	private JPanel leftPanel;
 	
 	static ArrayList snowball_list=new ArrayList();
@@ -64,7 +65,7 @@ public class Board extends JPanel implements ActionListener{
 		setLayout(null);
 		
 		B.playBgm(new File("sounds/26_Nunu and Willump, the Boy and his Yeti- Trailer.wav"), 1.0f, false);
-		setBackground(Color.black);
+		setBackground(new Color(19,60,106,59));
 		initBoard();
 		initVariables();
 	}
@@ -93,28 +94,23 @@ public class Board extends JPanel implements ActionListener{
 				InGame();
 				Main.setInGame();
 				B.stopBgm();
-				sound("소환사의 협곡에 오신것을 환영합니다");
-				//B.playSound(new File("sounds/JqTnOrnQF59C.wav"), 1.0f, false);
+				sound("summoner's");
+				B.playBgm(new File("sounds/runbgm.wav"), 1.0f, true);
 				
 			}
-			else if(key=='h'||key=='H') {
-				JFrame help=new JFrame();
-				help.setTitle("데굴데굴 눈덩이!!!");
-				help.setSize(500,500);
-				help.setResizable(false);
-				help.setVisible(true);
-				help.setLocationRelativeTo(null);
-				help.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			}
+			
 			else if(key=='E'||key=='e') {
 				skill_status=false;
 				if(nunu.getMP()>=20) {
+				sound("eskill");
 				skill2.Skill_snowball(nunu.getX()+45, nunu.getY());
 				nunu.setMP(20);
 				}
 			}
 			else if(key=='q'||key=='Q') {
+				if(nunu.getMP()>=50) {
 				skill_status=true;
+				}
 
 			}
 			else {
@@ -125,24 +121,48 @@ public class Board extends JPanel implements ActionListener{
 		}
 		@Override
 		public void keyReleased(KeyEvent e) {
-			nunu.keyReleased(e);
 			skill_status=false;
+			int key =e.getExtendedKeyCode();
+			if(key=='h'||key=='H') {
+
+				JFrame help=new JFrame();
+				help.setTitle("데굴데굴 눈덩이!!!");
+				help.setSize(750,800 );
+				help.setResizable(false);
+				help.setVisible(true);
+				help.setLocationRelativeTo(null);
+				
+				
+			
+				ImageIcon ic=new ImageIcon("images/help.png");
+				
+				JPanel p= new JPanel();
+				JLabel l=new JLabel("", ic, JLabel.CENTER);
+				
+				p.add(l);
+				help.add(p);
+				}
+				nunu.keyReleased(e);
+			
 		}
 	}
 	public void initmushroom() {
-		if(t%(init*3)==0) {
+		if(t%init==0) {
+		int R=(int)Math.random()*3+1;
+		if(R==1) {
 			m = new Mushroom("minion", 20);
 			mushroom_list.add(m);
 		}
-		else if(t%(init*2)==0) {
+		else if(R==2) {
 			m = new Mushroom("icewall", 10);
 			mushroom_list.add(m);
 	
 		}
-		else if(t%(init)==0) {
+		else if(R==3) {
 			m = new Mushroom("mushroom", 20);
 			mushroom_list.add(m);
 	
+		}
 		}
 		
 	}
@@ -150,9 +170,9 @@ public class Board extends JPanel implements ActionListener{
 	
 		if(Main.getInGame()) {
 		t+=1;
-		if(t%(init*30)==0) {
+		if(t%(init*7)==0) {
 			level+=1;
-			init-=5;
+			init-=3;
 		}
 		collisions();
 		
@@ -165,10 +185,10 @@ public class Board extends JPanel implements ActionListener{
 		move();
 		moveSnowball();
 		if(nunu.getHP()<=0) {
-			sound("아군이 당했습니다");
+			sound("killed");
 			timer.stop();
 			//String nickname=JOptionPane.showInputDialog();
-			String[] buttons= {"다시하기","끝내기","랭크확인"};
+			String[] buttons= {"다시하기","끝내기","티어확인"};
 			int result=JOptionPane.showOptionDialog(this, "NUNU가 당했습니다", "GAME OVER!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, "두번째값");
  
 			if(result==JOptionPane.YES_OPTION) {//계속하면 
@@ -211,9 +231,12 @@ public class Board extends JPanel implements ActionListener{
 				S=(snowball)(snowball_list.get(j));
 				Rectangle r2=S.getBounds();
 			if(r1.intersects(r2)) {
-				//sound(m.getEnemy());
+				sound("snowball_collision");
 				mushroom_list.remove(i);
 				snowball_list.remove(j);
+				nunu.setScore();
+				nunu.setScore();
+				
 			}
 			}
 		}
@@ -233,6 +256,8 @@ public class Board extends JPanel implements ActionListener{
 					mushroom_list.remove(i);
 					nunu.recover_consume();
 					nunu.setMP(50);
+					sound("qskill");
+					nunu.setscore();
 				}
 			}
 		}
@@ -263,27 +288,30 @@ public class Board extends JPanel implements ActionListener{
 		
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
-		Image back=new ImageIcon("images/introImage.jpg").getImage();
+		Image back=new ImageIcon("images/introImage-1.jpg").getImage();
 		g2d.drawImage(back, 0, 120, 1280, 720, null);
 		
 		//g2d.setColor(new Color(0,32,48));
 		//g2d.fillRect(480,400,400,100);
 		g2d.setColor(Color.white); 
-		g2d.drawRect(460,450,400,100);
+		g2d.drawRect(595,420,100,100);
 		
-		String s="Press 'S' to start";
-		Font small=new Font("Helvetica",Font.BOLD,30);
+		String s="Press                 to start";
+		Font small=new Font("Helvetica",Font.BOLD,40);
 		FontMetrics metr=this.getFontMetrics(small);
 		
 		g2d.setColor(Color.white);
 		g2d.setFont(small);
-		g2d.drawString(s,550,400);
-		g2d.setFont(new Font("Serif", Font.PLAIN,50));
-		g2d.drawString("START", 580, 510);
+		g2d.drawString(s,445,485);
+		g2d.setFont(new Font("Serif", Font.BOLD,50));
+		g2d.drawString("S", 631, 485);
 		String S="Press \'h\' to HELP";
 		g2d.setFont(small);
-		g2d.setColor(Color.darkGray);
-		g2d.drawString(S, 530, 900);
+		g2d.setColor(new Color(107,252,255,255));
+		g2d.drawString(S, 495, 900);
+		
+		g2d.setFont(new Font("Serif", Font.BOLD,80));
+		g2d.drawString("BIGGEST SNOWBALL EVER!", 70, 85);
 			
 	}
 	private void doDrawNunu(Graphics g) {//누누 캐릭터 그리는 함수
@@ -309,12 +337,13 @@ public class Board extends JPanel implements ActionListener{
 		
 		g2d.drawImage(nunu.getImage(),nunu.getX(), nunu.getY(), 200,200, this);
 		
+		
 		g2d.setColor(Color.black);
 		g2d.setFont(new Font("Verdana", Font.PLAIN, 20));
-		g2d.drawString("Nunu", nunu.getX()+80,nunu.getY()-25);
+		g2d.drawString("Nunu", nunu.getX()+95,nunu.getY()-25);
 		
 		g2d.setColor(Color.orange);
-		g2d.drawString("Lv "+level, nunu.getX()+25,nunu.getY()-25);
+		g2d.drawString("Lv "+level, nunu.getX()+35,nunu.getY()-25);
 		
 		g2d.setColor(Color.green);
 		g2d.fillRect(nunu.getX()+45, nunu.getY()-20, nunu.getHP(),10);
@@ -404,6 +433,7 @@ public class Board extends JPanel implements ActionListener{
 			nunu.keyPressed(e);
 		}
 	}
+	
 	
 	
 
