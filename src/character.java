@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 public class character extends JPanel{
 	private int mx;
 	private int my;
-	private int x=500;
+	private int x=550;
 	private int y=700;
 	private int w;
 	private int h;
@@ -23,6 +23,13 @@ public class character extends JPanel{
 	
 		
 	}
+	public void recover_consume() {
+		HP+=50;
+		if(HP>100) {
+			HP=100;
+		}
+	}
+	
 	public void setScore() {
 		score+=100;
 	}
@@ -39,6 +46,12 @@ public class character extends JPanel{
 	public void setMP() {
 		if(MP<100&&Main.getInGame()) {
 		MP+=0.1;
+		}
+	}
+	public void setMP(int skill) {
+		MP-=skill;
+		if(MP<0) {
+			MP=0;
 		}
 	}
 	public void setscore(){
