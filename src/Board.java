@@ -148,7 +148,7 @@ public class Board extends JPanel implements ActionListener{
 	}
 	public void initmushroom() {
 		if(t%init==0) {
-		int R=(int)Math.random()*3+1;
+		int R=(int)(Math.random()*3)+1;
 		if(R==1) {
 			m = new Mushroom("minion", 20);
 			mushroom_list.add(m);
@@ -187,6 +187,7 @@ public class Board extends JPanel implements ActionListener{
 		if(nunu.getHP()<=0) {
 			sound("killed");
 			timer.stop();
+			B.stopBgm();
 			//String nickname=JOptionPane.showInputDialog();
 			String[] buttons= {"다시하기","끝내기","티어확인"};
 			int result=JOptionPane.showOptionDialog(this, "NUNU가 당했습니다", "GAME OVER!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, "두번째값");
@@ -198,7 +199,106 @@ public class Board extends JPanel implements ActionListener{
 				System.exit(0);//종료
 			}
 			else {//취소하면 그대로
+				JFrame tier=new JFrame();
+				tier.setTitle("데굴데굴 눈덩이!!!");
+				tier.setSize(500,600);
+				tier.setResizable(false);
+				tier.setVisible(true);
+				tier.setLocationRelativeTo(null);
+				String t="";
 				
+				JPanel p= new JPanel();
+				p.setLayout(null);
+				p.setBackground(Color.white);
+				
+				JLabel st=new JLabel("당신의 점수 : "+nunu.getScore());
+				st.setBounds(150,130, 300, 100);
+				p.add(st);
+				int b=7000,s=10000,g=20000,pl=30000;
+				if(nunu.getScore()<7000) {
+					t="Bronze";
+					JLabel st2=new JLabel("다음 등급까지  "+(b-nunu.getScore())+"점 남았습니다.");
+					st2.setBounds(150,150,300,100);
+					p.add(st2);
+				}
+				else if(nunu.getScore()<10000) {
+					t="Silver";
+					JLabel st2=new JLabel("다음 등급까지  "+(s-nunu.getScore())+"점 남았습니다.");
+					st2.setBounds(150,150,300,100);
+					p.add(st2);
+				}
+				else if(nunu.getScore()<13000) {
+					t="Gold";
+					JLabel st2=new JLabel("다음 등급까지  "+(g-nunu.getScore())+"점 남았습니다.");
+					st2.setBounds(150,150,300,100);
+					p.add(st2);
+				}
+				else if(nunu.getScore()<15000) {
+					t="Platinum";
+					JLabel st2=new JLabel("다음 등급까지  "+(pl-nunu.getScore())+"점 남았습니다.");
+					st2.setBounds(150,150,300,100);
+					p.add(st2);
+				}
+				else if(nunu.getScore()>15000) {
+					t="Diamond";
+					JLabel st2=new JLabel("축하합니다. 최고 등급입니다.");
+					st2.setBounds(150,150,300,100);
+					p.add(st2);
+				}
+				
+				ImageIcon ic=new ImageIcon("images/"+t+".png");
+				
+				
+				
+				
+				
+				JLabel l=new JLabel("", ic, JLabel.CENTER);
+				l.setBounds(200, 50, 100, 100);
+				
+				JLabel l1 = new JLabel("브론즈(7000점 미만)");
+				JLabel l2 = new JLabel("실버(7000점 이상 10000점 미만)");
+				JLabel l3 = new JLabel("골드(10000점 이상 13000점 미만)");
+				JLabel l4 = new JLabel("플레티넘(13000점 이상 15000점 미만)");
+				JLabel l5 = new JLabel("다이아(15000점 이상)");
+				
+				ImageIcon Bronze = new ImageIcon("images/Bronze.png");
+				ImageIcon Silver = new ImageIcon("images/Silver.png");
+				ImageIcon Gold = new ImageIcon("images/Gold.png");
+				ImageIcon Platinum = new ImageIcon("images/Platinum.png");
+				ImageIcon Diamond= new ImageIcon("images/Diamond.png");
+				
+				JLabel B=new JLabel(Bronze);
+				JLabel S=new JLabel(Silver);
+				JLabel G=new JLabel(Gold);
+				JLabel P=new JLabel(Platinum);
+				JLabel D=new JLabel(Diamond);
+				
+				
+				B.setBounds(100,200,100,100); 
+				S.setBounds(100,250,100,100);
+				G.setBounds(100,300,100,100);
+				P.setBounds(100,350,100,100);
+				D.setBounds(100,400,100,100);
+				l1.setBounds(190, 250, 300, 20);
+				l2.setBounds(190, 300, 300, 20);
+				l3.setBounds(190, 350, 300, 20);
+				l4.setBounds(190, 400, 300, 20);
+				l5.setBounds(190, 450, 300, 20);
+				
+				p.add(B);
+				p.add(S);
+				p.add(G);
+				p.add(P);
+				p.add(D);
+				
+				p.add(l1);
+				p.add(l2);
+				p.add(l3);
+				p.add(l4);
+				p.add(l5);
+				
+				p.add(l);
+				tier.add(p);
 			}
 		}
 		}
@@ -285,6 +385,8 @@ public class Board extends JPanel implements ActionListener{
 				mushroom_list.remove(i);
 			}
 		nunu.setRe();
+		B.playBgm(new File("sounds/runbgm.wav"), 1.0f, true);
+		
 		
 	}
 	private void showIntroScreen(Graphics2D g2d) {//인트로 화면
