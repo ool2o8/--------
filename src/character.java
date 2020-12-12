@@ -61,7 +61,7 @@ public class character extends JPanel{
 	}
 	public void setsnowball(){
 		if(Main.getInGame()) {
-			snowball+=0.01;
+			snowball+=0.03;
 			}
 	}
 	public int getHP() {

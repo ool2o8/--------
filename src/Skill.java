@@ -1,4 +1,4 @@
-import java.awt.*;
+ import java.awt.*;
 
 import javax.swing.ImageIcon;
 
@@ -15,7 +15,6 @@ public class Skill {
 	public void Skill_snowball(int x, int y) {
 		S = new snowball(x,y);
 		Board.snowball_list.add(S);
-	
 	}
 	public Image getImage() {
 		return skillImage;

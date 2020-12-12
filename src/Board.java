@@ -2,9 +2,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.sound.sampled.AudioInputStream;
@@ -26,13 +29,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 public class Board extends JPanel implements ActionListener{
-	private static boolean inGame=false;
+
 	private Timer timer;
 	private character nunu;
 	private Background inGameBack;
 	private Dimension d;
 	private JLabel score=new JLabel();
-	private enemy e;
 	private Mushroom m;
 	private static int level=1;
 	private JButton help;
@@ -40,24 +42,14 @@ public class Board extends JPanel implements ActionListener{
 	private Skill skill;
 	private Skill skill2;
 	int init=100;
-	int t=0, t2=0;
-	int player=1;
+	int t=0;
 	int Hscore=0;
 	private static boolean skill_status=false;
-	private JPanel leftPanel;
-	
+	private String id=null;
 	static ArrayList snowball_list=new ArrayList();
-	snowball S;
-	ArrayList enemy_list=new ArrayList();
+	private snowball S;
 	ArrayList mushroom_list=new ArrayList();
 	Bgm B=new Bgm();
-	public void InGame() {//인게임 전환
-		Main.getInGame();
-		inGame=true;
-	}
-	public static boolean getInGame() {
-		return inGame;
-	}
 	public static int getLevel() {
 		return level;
 	}
@@ -91,11 +83,10 @@ public class Board extends JPanel implements ActionListener{
 			int key =e.getExtendedKeyCode();
 			if(key=='s'||key=='S') {
 				
-				InGame();
 				Main.setInGame();
 				B.stopBgm();
-				sound("summoner's");
 				B.playBgm(new File("sounds/runbgm.wav"), 1.0f, true);
+				sound("summoner's");
 				
 			}
 			
@@ -111,12 +102,15 @@ public class Board extends JPanel implements ActionListener{
 				if(nunu.getMP()>=50) {
 				skill_status=true;
 				}
+				else {
+					skill_status=false;
+				}
 
 			}
 			else {
 				nunu.keyPressed(e);
-				skill_status=false;
 			}
+			
 			
 		}
 		@Override
@@ -126,7 +120,7 @@ public class Board extends JPanel implements ActionListener{
 			if(key=='h'||key=='H') {
 
 				JFrame help=new JFrame();
-				help.setTitle("데굴데굴 눈덩이!!!");
+				help.setTitle("Help");
 				help.setSize(750,800 );
 				help.setResizable(false);
 				help.setVisible(true);
@@ -142,6 +136,16 @@ public class Board extends JPanel implements ActionListener{
 				p.add(l);
 				help.add(p);
 				}
+			else if(key=='r'||key=='R') {
+				if(Main.getInGame()) {
+				B.stopBgm();
+				reStart();
+				nunu.setRe();
+				}
+			}
+			else if(key=='q'||key=='Q') {
+				skill_status=false;
+			}
 				nunu.keyReleased(e);
 			
 		}
@@ -175,7 +179,7 @@ public class Board extends JPanel implements ActionListener{
 			init-=3;
 		}
 		collisions();
-		
+		repaint();
 		nunu.move();//누누 조작 함수
 		nunu.setMP();//누누 마나 재생
 		nunu.setscore();
@@ -185,11 +189,19 @@ public class Board extends JPanel implements ActionListener{
 		move();
 		moveSnowball();
 		if(nunu.getHP()<=0) {
+			
+			
 			sound("killed");
 			timer.stop();
 			B.stopBgm();
 			//String nickname=JOptionPane.showInputDialog();
-			String[] buttons= {"다시하기","끝내기","티어확인"};
+			id=JOptionPane.showInputDialog("ID 입력(8자 이내)");
+			if(id!=null) {
+				ConnectMysql sql=new ConnectMysql();
+				sql.connect();	
+				sql.update("INSERT INTO nunu_rank(id,Score) VALUES(\""+id+"\",'"+nunu.getScore()+"');");
+				
+			String[] buttons= {"다시하기","끝내기","랭크확인"};
 			int result=JOptionPane.showOptionDialog(this, "NUNU가 당했습니다", "GAME OVER!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, "두번째값");
  
 			if(result==JOptionPane.YES_OPTION) {//계속하면 
@@ -201,7 +213,7 @@ public class Board extends JPanel implements ActionListener{
 			else {//취소하면 그대로
 				JFrame tier=new JFrame();
 				tier.setTitle("데굴데굴 눈덩이!!!");
-				tier.setSize(500,600);
+				tier.setSize(500,1000);
 				tier.setResizable(false);
 				tier.setVisible(true);
 				tier.setLocationRelativeTo(null);
@@ -214,7 +226,7 @@ public class Board extends JPanel implements ActionListener{
 				JLabel st=new JLabel("당신의 점수 : "+nunu.getScore());
 				st.setBounds(150,130, 300, 100);
 				p.add(st);
-				int b=7000,s=10000,g=20000,pl=30000;
+				int b=7000,s=10000,g=13000,pl=15000;
 				if(nunu.getScore()<7000) {
 					t="Bronze";
 					JLabel st2=new JLabel("다음 등급까지  "+(b-nunu.getScore())+"점 남았습니다.");
@@ -279,11 +291,43 @@ public class Board extends JPanel implements ActionListener{
 				G.setBounds(100,300,100,100);
 				P.setBounds(100,350,100,100);
 				D.setBounds(100,400,100,100);
+				
 				l1.setBounds(190, 250, 300, 20);
 				l2.setBounds(190, 300, 300, 20);
 				l3.setBounds(190, 350, 300, 20);
 				l4.setBounds(190, 400, 300, 20);
 				l5.setBounds(190, 450, 300, 20);
+				
+				ArrayList rank_list=new ArrayList();
+				Label Test;
+				try {
+					sql.rs=sql.stmt.executeQuery("SELECT @rownum:=@rownum+1  rnum, nunu_rank.*FROM (SELECT *FROM nunu_rank ORDER BY Score DESC) nunu_rank, (SELECT @ROWNUM := 0) R");
+					while(sql.rs.next()){
+						if(id.equals(sql.rs.getString("id")))
+						rank_list.add(new Label("나의 순위"+sql.rs.getInt("rnum")+"    "+sql.rs.getString("id")+"    "+sql.rs.getString("Score")));
+					}
+				}
+				catch(Exception e2) {
+					System.out.println("getString error:"+e2);
+				}
+				try {
+					sql.rs=sql.stmt.executeQuery("SELECT @rownum:=@rownum+1  rnum, nunu_rank.*FROM (SELECT *FROM nunu_rank ORDER BY Score DESC) nunu_rank, (SELECT @ROWNUM := 0) R LIMIT 0,10");
+					while(sql.rs.next()){
+						rank_list.add(new Label(sql.rs.getInt("rnum")+"    "+sql.rs.getString("id")+"    "+sql.rs.getString("Score")));
+					}
+				}
+				catch(Exception e2) {
+					System.out.println("getString error:"+e2);
+				}
+				
+				for(int i=0;i<rank_list.size();i++) {
+					Test=(Label)(rank_list.get(i));
+					Test.setFont(new Font("verdana",Font.BOLD,30));
+					Test.setBounds(100,500+i*40,400,50);
+					p.add(Test);
+				}
+				
+				
 				
 				p.add(B);
 				p.add(S);
@@ -297,13 +341,17 @@ public class Board extends JPanel implements ActionListener{
 				p.add(l4);
 				p.add(l5);
 				
+				JLabel r=new JLabel("다시하려면 R");
+				r.setBounds(200, 500, 100, 30);
+				p.add(r);
 				p.add(l);
 				tier.add(p);
 			}
-		}
+			}
+			}
 		}
 	
-		repaint();
+		
 	}
 	public void move() {
 		for(int i=0;i<mushroom_list.size();i++) {
@@ -331,12 +379,11 @@ public class Board extends JPanel implements ActionListener{
 				S=(snowball)(snowball_list.get(j));
 				Rectangle r2=S.getBounds();
 			if(r1.intersects(r2)) {
-				sound("snowball_collision");
+				
 				mushroom_list.remove(i);
 				snowball_list.remove(j);
 				nunu.setScore();
-				nunu.setScore();
-				
+				B.playSound(new File("sounds/snowball_collision.wav"), 1.0f, false);
 			}
 			}
 		}
@@ -349,15 +396,19 @@ public class Board extends JPanel implements ActionListener{
 				if(skill_status==false) {
 				nunu.getDamage(m.getDamage());
 				sound(m.getEnemy());
+				B.playSound(new File("sounds/"+m.getEnemy()+".wav"), 2.0f, false);
+				
 				mushroom_list.remove(i);
 				nunu.setScore();
 				}
 				else {
+					System.out.println("버억");
 					mushroom_list.remove(i);
 					nunu.recover_consume();
 					nunu.setMP(50);
-					sound("qskill");
+					B.playSound(new File("sounds/qskill.wav"), 1.0f, false);
 					nunu.setscore();
+					skill_status=false;
 				}
 			}
 		}
@@ -376,6 +427,7 @@ public class Board extends JPanel implements ActionListener{
 		}
 	}
 	public void reStart() {
+		id=null;
 		timer.start();
 		t=0;
 		level=1;
@@ -428,6 +480,7 @@ public class Board extends JPanel implements ActionListener{
 			H="BEST : "+Hscore;
 		}
 		else {
+			Hscore=nunu.getScore();
 			H="BEST : "+nunu.getScore();
 		}
 		
@@ -513,7 +566,7 @@ public class Board extends JPanel implements ActionListener{
 	}
 	private void doDrawing(Graphics g) {
 		Graphics2D g2d=(Graphics2D) g;
-		if(!inGame) {//!인게임
+		if(!Main.getInGame()) {//!인게임
 			showIntroScreen(g2d);//인트로화면 
 			
 		}

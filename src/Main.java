@@ -12,11 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-public class Main extends JFrame implements ActionListener{
+public class Main extends JFrame{
 	private static boolean inGame=false;
-	private Help H;
-	private JButton help;
 	public Main() {
+		
 		initUI();
 	}
 	public static boolean getInGame() {
@@ -48,19 +47,4 @@ public class Main extends JFrame implements ActionListener{
 		A.setVisible(true);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	private class Help extends JFrame implements ActionListener{//입력 감지로 게임을 진행하는 클래스
-		public void actionPerformed(ActionEvent event) {
-			System.out.println("클릭");
-			setTitle("데굴데굴 눈덩이!!!");
-			setSize(1280,1000);
-			setResizable(false);
-			setLocationRelativeTo(null);
-			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		}
-	}
 }

@@ -16,7 +16,6 @@ public class Background extends JPanel{
 		
 		Y1=0;
 		Y2=Y1-h+5;
-		
 	}
 	public void setY() {
 		Y1+=5;

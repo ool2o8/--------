@@ -8,7 +8,6 @@ public class snowball {
 	private int y;
 	private int w;
 	private int h;
-	private boolean visible;
 	private Image image;
 	private Rectangle rect;
 	private int speed=10;
@@ -46,12 +45,7 @@ public class snowball {
 		y-=speed;
 		rect.y=y;
 	}
-	public boolean isVisible() {
-		return visible;
-	}
-	public void setVisible(boolean visible) {
-		this.visible=visible;
-	}
+	
 	public Rectangle getBounds() {
 		
 		return rect;

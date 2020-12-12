@@ -7,18 +7,17 @@ public class enemy {
 	private int y;
 	private int w;
 	private int h;
-	private boolean visible;
 	private Image image;
 	private Rectangle rect;
-	private int speed=(int)(Math.random()*(Board.getLevel())+1);
+	private int speed;
 	private String enemy;
 	public enemy(String enemy) {
-	
+	 
 		ImageIcon ic = new ImageIcon("images/"+enemy+".png");
 		this.enemy=enemy;
 		image=ic.getImage();
 		x=(int)(Math.random()*1180);
-		 
+		speed=(int)(Math.random()*(Board.getLevel())+1);
 		
 		w=image.getWidth(null);
 		h=image.getHeight(null);
@@ -50,12 +49,7 @@ public class enemy {
 		y+=speed;
 		rect.y=y;
 	}
-	public boolean isVisible() {
-		return visible;
-	}
-	public void setVisible(boolean visible) {
-		this.visible=visible;
-	}
+	
 	public Rectangle getBounds() {
 		
 		if(enemy.equals("icewall")) {
