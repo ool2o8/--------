@@ -10,9 +10,9 @@ public class ConnectMysql {
 	void connect(){
 		try
 		{
-			this.conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/nunu_rank?serverTimezone=UTC","root","mijung1208!");
+			this.conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/nunu_rank?serverTimezone=UTC","root","");
 			this.stmt=this.conn.createStatement();
-			System.out.println("µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á ¼º°ø");
+			System.out.println("ÂµÂ¥Ã€ÃŒÃ…ÃÂºÂ£Ã€ÃŒÂ½Âº Â¿Â¬Â°Ã¡ Â¼ÂºÂ°Ã¸");
 	
 		}
 		catch(Exception e)
